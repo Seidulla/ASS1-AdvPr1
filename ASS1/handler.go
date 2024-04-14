@@ -32,7 +32,7 @@ type Device struct {
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = ""
+	dbPass   = "aldi6on9"
 	dbName   = "electronics"
 )
 
@@ -99,18 +99,21 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 	defer db.Close()
+	// Получение данных из формы
+	type1 := r.FormValue("type1")
+	brand := r.FormValue("brand")
+	model := r.FormValue("model")
 
-	var device Device
-	json.NewDecoder(r.Body).Decode(&device)
-
-	CreateDevice(db, device.Type1, device.Brand, device.Model)
+	// Добавление нового устройства в базу данных
+	err = CreateDevice(db, type1, brand, model)
 	if err != nil {
-		http.Error(w, "Failed to create", http.StatusInternalServerError)
+		// Обработка ошибки
+		http.Error(w, "Failed to create device", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintln(w, "Device created successfully")
+	// Перенаправление на главную страницу или любую другую страницу
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func CreateDevice(db *sql.DB, type1, brand, model string) error {
@@ -227,6 +230,7 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
+
 func DeleteDevice(db *sql.DB, id int) error {
 	query := "DELETE FROM electronic WHERE id = ?"
 	_, err := db.Exec(query, id)
