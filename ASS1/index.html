@@ -7,6 +7,21 @@
 </head>
 <body>
     <h1>Device List</h1>
+    <form action="/" method="get">
+        <label for="filter">Filter by Brand:</label>
+        <input type="text" id="filter" name="filter" placeholder="Enter filter">
+        <button type="submit">Apply Filter</button>
+    </form>
+    <form action="/" method="get">
+        <label for="sort">Sort by:</label>
+        <select id="sort" name="sort">
+            <option value="">None</option>
+            <option value="brand">Brand</option>
+            <option value="model">Model</option>
+            <option value="type1">Type</option>
+        </select>
+        <button type="submit">Apply Sort</button>
+    </form>
     <ul>
         {{range .}}
         <li>{{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}

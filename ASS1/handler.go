@@ -44,6 +44,26 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
+	// Получаем параметр фильтра из URL
+	filter := r.URL.Query().Get("filter")
+	sort := r.URL.Query().Get("sort")
+
+	// SQL-запрос с учетом фильтра
+	query := "SELECT id, type1, brand, model FROM electronic"
+	if filter != "" {
+		query += " WHERE brand LIKE '%" + filter + "%'"
+	}
+	if sort != "" {
+		query += " ORDER BY " + sort
+	}
+
+	// Получаем устройства из базы данных с учетом фильтра
+	devices, err = GetDevicesFromDBWithFilter(query)
+	if err != nil {
+		// Обработка ошибки
+		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
+		return
+	}
 
 	// Загрузка HTML-шаблона
 	tmpl, err := template.ParseFiles("index.html")
@@ -61,6 +81,36 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func GetDevicesFromDBWithFilter(query string) ([]Device, error) {
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	// Выполнение запроса к базе данных с учетом фильтра
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Перебор результатов запроса и создание списка устройств
+	var devices []Device
+	for rows.Next() {
+		var device Device
+		if err := rows.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model); err != nil {
+			return nil, err
+		}
+		devices = append(devices, device)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return devices, nil
 }
 
 func GetDevicesFromDB() ([]Device, error) {
