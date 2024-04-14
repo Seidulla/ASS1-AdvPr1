@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 )
 
@@ -14,6 +15,20 @@ type Response struct {
 	Status string `json:"status"`
 
 	Message string `json:"message"`
+}
+
+func mainPageHandler(w http.ResponseWriter, r *http.Request) {
+	var fileName = "index.html"
+	t, err := template.ParseFiles(fileName)
+	if err != nil {
+		fmt.Println("error parsing file", err)
+		return
+	}
+	err = t.ExecuteTemplate(w, fileName, nil)
+	if err != nil {
+		fmt.Println("error executing template", err)
+		return
+	}
 }
 
 func handleJSONRequest(w http.ResponseWriter, r *http.Request) {
@@ -28,15 +43,10 @@ func handleJSONRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if requestBody.Message == "" {
-		errorMessage := Response{
-			Status:  "400",
-			Message: "Invalid JSON message",
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(errorMessage)
+		http.Error(w, "Invalid JSON message", http.StatusBadRequest)
 		return
 	}
+
 	fmt.Println("Recieved message: ", requestBody.Message)
 
 	response := Response{
@@ -48,3 +58,14 @@ func handleJSONRequest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
+
+//if requestBody.Message == "" {
+//    errorMessage := Response{
+//        Status:  "400",
+//        Message: "Invalid JSON message",
+//    }
+//    w.Header().Set("Content-Type", "application/json")
+//    w.WriteHeader(http.StatusBadRequest)
+//    json.NewEncoder(w).Encode(errorMessage)
+//    return
+//}
