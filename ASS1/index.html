@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Device List</title>
 </head>
 <body>
-    <h1>Page</h1>
+    <h1>Device List</h1>
+    <form action="/" method="get">
+        <label for="filter">Filter by Brand:</label>
+        <input type="text" id="filter" name="filter" placeholder="Enter filter">
+        <button type="submit">Apply Filter</button>
+    </form>
+    <form action="/" method="get">
+        <label for="sort">Sort by:</label>
+        <select id="sort" name="sort">
+            <option value="">None</option>
+            <option value="brand">Brand</option>
+            <option value="model">Model</option>
+            <option value="type1">Type</option>
+        </select>
+        <button type="submit">Apply Sort</button>
+    </form>
+    <ul>
+        {{range .}}
+        <li>{{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}
+            <form action="/device/{{.ID}}" method="post" style="display: inline;">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit">Delete</button>
+            </form>
+            <a href="/device/{{.ID}}/edit">Edit</a>
+        </li>
+        {{end}}
+    </ul>
+    <form action="/device" method="post">
+        <label for="type1">Type:</label>
+        <input type="text" id="type1" name="type1">
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand">
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model">
+        <button type="submit">Create</button>
+    </form>
 </body>
 </html>

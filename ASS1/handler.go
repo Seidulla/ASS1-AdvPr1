@@ -24,30 +24,123 @@ type Response struct {
 
 type Device struct {
 	ID    int    `json:"id"`
-	type1 string `json:"type1"`
-	brand string `json:"brand"`
-	model string `json:"model"`
+	Type1 string `json:"type1"`
+	Brand string `json:"brand"`
+	Model string `json:"model"`
 }
 
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = ""
+	dbPass   = "aldi6on9"
 	dbName   = "electronics"
 )
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {
-	var fileName = "index.html"
-	t, err := template.ParseFiles(fileName)
+	// Запрос данных из базы данных
+	devices, err := GetDevicesFromDB() // Предполагается, что у вас есть функция для получения всех устройств из базы данных
 	if err != nil {
-		fmt.Println("error parsing file", err)
+		// Обработка ошибки
+		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
-	err = t.ExecuteTemplate(w, fileName, nil)
+	// Получаем параметр фильтра из URL
+	filter := r.URL.Query().Get("filter")
+	sort := r.URL.Query().Get("sort")
+
+	// SQL-запрос с учетом фильтра
+	query := "SELECT id, type1, brand, model FROM electronic"
+	if filter != "" {
+		query += " WHERE brand LIKE '%" + filter + "%'"
+	}
+	if sort != "" {
+		query += " ORDER BY " + sort
+	}
+
+	// Получаем устройства из базы данных с учетом фильтра
+	devices, err = GetDevicesFromDBWithFilter(query)
 	if err != nil {
-		fmt.Println("error executing template", err)
+		// Обработка ошибки
+		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
+
+	// Загрузка HTML-шаблона
+	tmpl, err := template.ParseFiles("index.html")
+	if err != nil {
+		// Обработка ошибки
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		return
+	}
+
+	// Отображение HTML-страницы с данными
+	err = tmpl.Execute(w, devices)
+	if err != nil {
+		// Обработка ошибки
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		return
+	}
+
+}
+
+func GetDevicesFromDBWithFilter(query string) ([]Device, error) {
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	// Выполнение запроса к базе данных с учетом фильтра
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Перебор результатов запроса и создание списка устройств
+	var devices []Device
+	for rows.Next() {
+		var device Device
+		if err := rows.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model); err != nil {
+			return nil, err
+		}
+		devices = append(devices, device)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return devices, nil
+}
+
+func GetDevicesFromDB() ([]Device, error) {
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	// Выполнение запроса к базе данных
+	rows, err := db.Query("SELECT id, type1, brand, model FROM electronic")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Перебор результатов запроса и создание списка устройств
+	var devices []Device
+	for rows.Next() {
+		var device Device
+		if err := rows.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model); err != nil {
+			return nil, err
+		}
+		devices = append(devices, device)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return devices, nil
 }
 
 func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
@@ -56,18 +149,21 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 	defer db.Close()
+	// Получение данных из формы
+	type1 := r.FormValue("type1")
+	brand := r.FormValue("brand")
+	model := r.FormValue("model")
 
-	var device Device
-	json.NewDecoder(r.Body).Decode(&device)
-
-	CreateDevice(db, device.type1, device.brand, device.model)
+	// Добавление нового устройства в базу данных
+	err = CreateDevice(db, type1, brand, model)
 	if err != nil {
-		http.Error(w, "Failed to create", http.StatusInternalServerError)
+		// Обработка ошибки
+		http.Error(w, "Failed to create device", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintln(w, "Device created successfully")
+	// Перенаправление на главную страницу или любую другую страницу
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func CreateDevice(db *sql.DB, type1, brand, model string) error {
@@ -110,7 +206,7 @@ func GetDevice(db *sql.DB, id int) (*Device, error) {
 	row := db.QueryRow(query, id)
 
 	device := &Device{}
-	err := row.Scan(&device.ID, &device.type1, &device.brand, &device.model)
+	err := row.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +231,7 @@ func updateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.NewDecoder(r.Body).Decode(&device)
 
 	// Call the GetUser function to fetch the user data from the database
-	UpdateDevice(db, deviceID, device.type1, device.brand, device.model)
+	UpdateDevice(db, deviceID, device.Type1, device.Brand, device.Model)
 	if err != nil {
 		http.Error(w, "Device not found", http.StatusNotFound)
 		return
@@ -184,6 +280,7 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
+
 func DeleteDevice(db *sql.DB, id int) error {
 	query := "DELETE FROM electronic WHERE id = ?"
 	_, err := db.Exec(query, id)
