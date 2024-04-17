@@ -42,7 +42,6 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
-	// Получаем параметр фильтра из URL
 	filter := r.URL.Query().Get("filter")
 	sort := r.URL.Query().Get("sort")
 	page := r.URL.Query().Get("page")
@@ -271,11 +270,9 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	// Get the 'id' parameter from the URL
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
-	// Convert 'id' to an integer
 	deviceID, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid 'id' parameter", http.StatusBadRequest)
