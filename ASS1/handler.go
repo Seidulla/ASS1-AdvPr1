@@ -37,10 +37,8 @@ const (
 )
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {
-	// Запрос данных из базы данных
-	devices, err := GetDevicesFromDB() // Предполагается, что у вас есть функция для получения всех устройств из базы данных
+	devices, err := GetDevicesFromDB()
 	if err != nil {
-		// Обработка ошибки
 		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
@@ -49,15 +47,13 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	sort := r.URL.Query().Get("sort")
 	page := r.URL.Query().Get("page")
 
-	limit := 10 // Number of items per page
-	offset := 0 // Offset for SQL query
+	limit := 10
+	offset := 0
 
-	// Calculate offset based on pagination
 	if p, err := strconv.Atoi(page); err == nil && p > 1 {
 		offset = (p - 1) * limit
 	}
 
-	// SQL query considering all parameters
 	query := "SELECT id, type1, brand, model FROM electronic"
 	if filter != "" {
 		query += " WHERE brand LIKE '%" + filter + "%'"
@@ -67,26 +63,20 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	query += fmt.Sprintf(" LIMIT %d OFFSET %d", limit, offset)
 
-	// Get devices from the database with pagination
 	devices, err = GetDevicesFromDBWithPagination(query)
 	if err != nil {
-		// Handle error
 		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
 
-	// Загрузка HTML-шаблона
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
-		// Обработка ошибки
 		http.Error(w, "Failed to load template", http.StatusInternalServerError)
 		return
 	}
 
-	// Отображение HTML-страницы с данными
 	err = tmpl.Execute(w, devices)
 	if err != nil {
-		// Обработка ошибки
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		return
 	}
@@ -100,14 +90,12 @@ func GetDevicesFromDBWithPagination(query string) ([]Device, error) {
 	}
 	defer db.Close()
 
-	// Execute query to fetch devices with pagination
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	// Iterate through results and create a list of devices
 	var devices []Device
 	for rows.Next() {
 		var device Device
@@ -130,14 +118,12 @@ func GetDevicesFromDBWithFilter(query string) ([]Device, error) {
 	}
 	defer db.Close()
 
-	// Выполнение запроса к базе данных с учетом фильтра
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	// Перебор результатов запроса и создание списка устройств
 	var devices []Device
 	for rows.Next() {
 		var device Device
@@ -160,14 +146,12 @@ func GetDevicesFromDB() ([]Device, error) {
 	}
 	defer db.Close()
 
-	// Выполнение запроса к базе данных
 	rows, err := db.Query("SELECT id, type1, brand, model FROM electronic")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	// Перебор результатов запроса и создание списка устройств
 	var devices []Device
 	for rows.Next() {
 		var device Device
@@ -189,12 +173,10 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 	defer db.Close()
-	// Получение данных из формы
 	type1 := r.FormValue("type1")
 	brand := r.FormValue("brand")
 	model := r.FormValue("model")
 
-	// Добавление нового устройства в базу данных
 	err = CreateDevice(db, type1, brand, model)
 	if err != nil {
 		// Обработка ошибки
@@ -202,7 +184,6 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Перенаправление на главную страницу или любую другую страницу
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -222,21 +203,17 @@ func getDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Get the 'id' parameter from the URL
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
-	// Convert 'id' to an integer
 	deviceID, err := strconv.Atoi(idStr)
 
-	// Call the GetUser function to fetch the user data from the database
 	user, err := GetDevice(db, deviceID)
 	if err != nil {
 		http.Error(w, "Device not found", http.StatusNotFound)
 		return
 	}
 
-	// Convert the user object to JSON and send it in the response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
@@ -260,17 +237,14 @@ func updateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Get the 'id' parameter from the URL
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
-	// Convert 'id' to an integer
 	deviceID, err := strconv.Atoi(idStr)
 
 	var device Device
 	err = json.NewDecoder(r.Body).Decode(&device)
 
-	// Call the GetUser function to fetch the user data from the database
 	UpdateDevice(db, deviceID, device.Type1, device.Brand, device.Model)
 	if err != nil {
 		http.Error(w, "Device not found", http.StatusNotFound)
@@ -316,7 +290,6 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintln(w, "Device deleted successfully")
 
-	// Convert the user object to JSON and send it in the response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
@@ -371,7 +344,6 @@ func checkDBConnection() error {
 	}
 	defer db.Close()
 
-	// Попробуйте выполнить простой запрос, например, выборку одной строки
 	var result string
 	err = db.QueryRow("SELECT 'Connected to database'").Scan(&result)
 	if err != nil {
