@@ -47,8 +47,17 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	// Получаем параметр фильтра из URL
 	filter := r.URL.Query().Get("filter")
 	sort := r.URL.Query().Get("sort")
+	page := r.URL.Query().Get("page")
 
-	// SQL-запрос с учетом фильтра
+	limit := 10 // Number of items per page
+	offset := 0 // Offset for SQL query
+
+	// Calculate offset based on pagination
+	if p, err := strconv.Atoi(page); err == nil && p > 1 {
+		offset = (p - 1) * limit
+	}
+
+	// SQL query considering all parameters
 	query := "SELECT id, type1, brand, model FROM electronic"
 	if filter != "" {
 		query += " WHERE brand LIKE '%" + filter + "%'"
@@ -56,11 +65,12 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	if sort != "" {
 		query += " ORDER BY " + sort
 	}
+	query += fmt.Sprintf(" LIMIT %d OFFSET %d", limit, offset)
 
-	// Получаем устройства из базы данных с учетом фильтра
-	devices, err = GetDevicesFromDBWithFilter(query)
+	// Get devices from the database with pagination
+	devices, err = GetDevicesFromDBWithPagination(query)
 	if err != nil {
-		// Обработка ошибки
+		// Handle error
 		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
 		return
 	}
@@ -81,6 +91,36 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func GetDevicesFromDBWithPagination(query string) ([]Device, error) {
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	// Execute query to fetch devices with pagination
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Iterate through results and create a list of devices
+	var devices []Device
+	for rows.Next() {
+		var device Device
+		if err := rows.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model); err != nil {
+			return nil, err
+		}
+		devices = append(devices, device)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return devices, nil
 }
 
 func GetDevicesFromDBWithFilter(query string) ([]Device, error) {

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Device List</title>
 </head>
 <body>
@@ -24,23 +22,13 @@
     </form>
     <ul>
         {{range .}}
-        <li>{{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}
-            <form action="/device/{{.ID}}" method="post" style="display: inline;">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit">Delete</button>
-            </form>
-            <a href="/device/{{.ID}}/edit">Edit</a>
-        </li>
+        <li>{{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}</li>
         {{end}}
     </ul>
-    <form action="/device" method="post">
-        <label for="type1">Type:</label>
-        <input type="text" id="type1" name="type1">
-        <label for="brand">Brand:</label>
-        <input type="text" id="brand" name="brand">
-        <label for="model">Model:</label>
-        <input type="text" id="model" name="model">
-        <button type="submit">Create</button>
+    <form action="/" method="get">
+        <label for="page">Page:</label>
+        <input type="number" id="page" name="page" min="1">
+        <button type="submit">Go</button>
     </form>
 </body>
 </html>
