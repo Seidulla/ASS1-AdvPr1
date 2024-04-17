@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/sirupsen/logrus"
 
@@ -16,13 +17,18 @@ var log = logrus.New()
 
 func main() {
 	log.SetFormatter(&logrus.JSONFormatter{})
+	file, err := os.OpenFile("device.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+
+		log.Out = file
+	} else {
+
+		log.Error("Failed to log to file, using default stderr")
+	}
 
 	r := mux.NewRouter()
-
 	r.HandleFunc("/", mainPageHandler)
-
 	r.HandleFunc("/json", handleJSONRequest).Methods("POST")
-
 	r.HandleFunc("/device", limitMiddleware(createDeviceHandler)).Methods("POST")
 	r.HandleFunc("/device/{id}", limitMiddleware(getDeviceHandler)).Methods("GET")
 	r.HandleFunc("/device/{id}", limitMiddleware(updateDeviceHandler)).Methods("PUT")
