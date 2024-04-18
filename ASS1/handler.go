@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -32,7 +33,7 @@ type Device struct {
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = "aldi6on9"
+	dbPass   = "ai"
 	dbName   = "electronics"
 )
 
@@ -52,6 +53,12 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	if p, err := strconv.Atoi(page); err == nil && p > 1 {
 		offset = (p - 1) * limit
 	}
+
+	log.WithFields(logrus.Fields{
+		"action": "mainPageHandler",
+		"method": r.Method,
+		"path":   r.URL.Path,
+	}).Info("Handling main page request")
 
 	query := "SELECT id, type1, brand, model FROM electronic"
 	if filter != "" {

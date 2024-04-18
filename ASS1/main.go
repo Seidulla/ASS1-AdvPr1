@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -16,29 +15,30 @@ var limiter = rate.NewLimiter(1, 3)
 var log = logrus.New()
 
 func main() {
+
 	log.SetFormatter(&logrus.JSONFormatter{})
-	file, err := os.OpenFile("device.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err == nil {
-
-		log.Out = file
-	} else {
-
-		log.Error("Failed to log to file, using default stderr")
+	logFile, err := os.OpenFile("application.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Error("Failed to open log file: ", err)
+		return
 	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", mainPageHandler)
-	r.HandleFunc("/json", handleJSONRequest).Methods("POST")
-	r.HandleFunc("/device", limitMiddleware(createDeviceHandler)).Methods("POST")
-	r.HandleFunc("/device/{id}", limitMiddleware(getDeviceHandler)).Methods("GET")
-	r.HandleFunc("/device/{id}", limitMiddleware(updateDeviceHandler)).Methods("PUT")
-	r.HandleFunc("/device/{id}", limitMiddleware(deleteDeviceHandler)).Methods("DELETE")
+	r.HandleFunc("/", limitHandler(mainPageHandler)).Methods("GET")
+	r.HandleFunc("/json", limitHandler(handleJSONRequest)).Methods("POST")
+	r.HandleFunc("/device", limitHandler(createDeviceHandler)).Methods("POST")
+	r.HandleFunc("/device/{id}", limitHandler(getDeviceHandler)).Methods("GET")
+	r.HandleFunc("/device/{id}", limitHandler(updateDeviceHandler)).Methods("PUT")
+	r.HandleFunc("/device/{id}", limitHandler(deleteDeviceHandler)).Methods("DELETE")
 
-	fmt.Println("Server listening on port 8080")
+	log.Info("Server listening on port 8080")
 	http.ListenAndServe(":8080", r)
 }
 
-func limitMiddleware(next http.HandlerFunc) http.HandlerFunc {
+func limitHandler(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !limiter.Allow() {
 			http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
