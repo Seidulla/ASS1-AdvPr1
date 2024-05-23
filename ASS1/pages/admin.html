@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+        }
+        #roles-list {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input, textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+</head>
+<body>
+<h1>Admin Profile</h1>
+<p>Welcome to the admin profile page!</p>
+
+<h2>Roles Management</h2>
+
+<div id="roles-list">
+    {{range .Roles}}
+    <p>ID: {{.ID}}, Name: {{.Name}}</p>
+    {{else}}
+    <p>No roles found.</p>
+    {{end}}
+</div>
+
+<h3>Create Role</h3>
+<form action="/admin/roles" method="post">
+    <label for="create-role-name">Role Name:</label>
+    <input type="text" id="create-role-name" name="name" required><br>
+    <button type="submit">Create Role</button>
+</form>
+
+<h3>Update Role</h3>
+<form action="/admin/roles/update" method="post">
+    <input type="hidden" name="_method" value="put">
+    <label for="update-role-id">Role ID:</label>
+    <input type="text" id="update-role-id" name="id" required><br>
+    <label for="update-role-name">New Role Name:</label>
+    <input type="text" id="update-role-name" name="name" required><br>
+    <button type="submit">Update Role</button>
+</form>
+
+<h3>Delete Role</h3>
+<form action="/admin/roles/delete" method="post">
+    <input type="hidden" name="_method" value="delete">
+    <label for="delete-role-id">Role ID:</label>
+    <input type="text" id="delete-role-id" name="id" required><br>
+    <button type="submit">Delete Role</button>
+</form>
+<h2>Send important information to Users</h2>
+<form action="/admin/send-email" method="post">
+    <label for="discount">Discounts and Important Events:</label><br>
+    <textarea id="discount" name="discount" rows="4" cols="50"></textarea><br>
+    <button type="submit">Send Email to All Users</button>
+</form>
+
+</body>
+</html>

@@ -18,8 +18,7 @@ type RequestBody struct {
 }
 
 type Response struct {
-	Status string `json:"status"`
-
+	Status  string `json:"status"`
 	Message string `json:"message"`
 }
 
@@ -29,13 +28,6 @@ type Device struct {
 	Brand string `json:"brand"`
 	Model string `json:"model"`
 }
-
-const (
-	dbDriver = "mysql"
-	dbUser   = "root"
-	dbPass   = "ai"
-	dbName   = "electronics"
-)
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	devices, err := GetDevicesFromDB()
@@ -75,7 +67,7 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl, err := template.ParseFiles("index.html")
+	tmpl, err := template.ParseFiles("pages/index.html")
 	if err != nil {
 		http.Error(w, "Failed to load template", http.StatusInternalServerError)
 		return
@@ -90,35 +82,8 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDevicesFromDBWithPagination(query string) ([]Device, error) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var devices []Device
-	for rows.Next() {
-		var device Device
-		if err := rows.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model); err != nil {
-			return nil, err
-		}
-		devices = append(devices, device)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return devices, nil
-}
-
-func GetDevicesFromDBWithFilter(query string) ([]Device, error) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +111,8 @@ func GetDevicesFromDBWithFilter(query string) ([]Device, error) {
 }
 
 func GetDevicesFromDB() ([]Device, error) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		return nil, err
 	}
@@ -185,7 +151,6 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = CreateDevice(db, type1, brand, model)
 	if err != nil {
-		// Обработка ошибки
 		http.Error(w, "Failed to create device", http.StatusInternalServerError)
 		return
 	}
@@ -339,21 +304,4 @@ func handleJSONRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
-}
-
-func checkDBConnection() error {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	var result string
-	err = db.QueryRow("SELECT 'Connected to database'").Scan(&result)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(result)
-	return nil
 }
