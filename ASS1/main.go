@@ -15,7 +15,6 @@ var log = logrus.New()
 func main() {
 	log.SetFormatter(&logrus.JSONFormatter{})
 	logFile, err := os.OpenFile("application.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-
 	if err != nil {
 		log.Error("Failed to open log file: ", err)
 		return
@@ -32,6 +31,7 @@ func main() {
 	r.HandleFunc("/device/{id}", limitHandler(getDeviceHandler)).Methods("GET")
 	r.HandleFunc("/device/{id}", limitHandler(updateDeviceHandler)).Methods("PUT")
 	r.HandleFunc("/device/{id}", limitHandler(deleteDeviceHandler)).Methods("DELETE")
+
 	r.HandleFunc("/register", registerHandler).Methods("GET", "POST")
 	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
 	r.HandleFunc("/confirm", confirmHandler).Methods("GET")

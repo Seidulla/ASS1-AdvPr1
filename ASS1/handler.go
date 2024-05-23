@@ -4,13 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"html/template"
 	"net/http"
 	"strconv"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
 type RequestBody struct {
@@ -78,7 +77,6 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		return
 	}
-
 }
 
 func GetDevicesFromDBWithPagination(query string) ([]Device, error) {
@@ -178,15 +176,19 @@ func getDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	idStr := vars["id"]
 
 	deviceID, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid device ID", http.StatusBadRequest)
+		return
+	}
 
-	user, err := GetDevice(db, deviceID)
+	device, err := GetDevice(db, deviceID)
 	if err != nil {
 		http.Error(w, "Device not found", http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(device)
 }
 
 func GetDevice(db *sql.DB, id int) (*Device, error) {
@@ -212,21 +214,30 @@ func updateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	idStr := vars["id"]
 
 	deviceID, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid device ID", http.StatusBadRequest)
+		return
+	}
 
 	var device Device
 	err = json.NewDecoder(r.Body).Decode(&device)
+	if err != nil {
+		http.Error(w, "Invalid JSON data", http.StatusBadRequest)
+		return
+	}
 
-	UpdateDevice(db, deviceID, device.Type1, device.Brand, device.Model)
+	err = UpdateDevice(db, deviceID, device.Type1, device.Brand, device.Model)
 	if err != nil {
 		http.Error(w, "Device not found", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprintln(w, "Device updated successfully")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Response{Status: "success", Message: "Device updated successfully"})
 }
 
 func UpdateDevice(db *sql.DB, id int, type1, brand, model string) error {
-	query := "UPDATE electronic SET type = ?, brand = ?, model = ? WHERE id = ?"
+	query := "UPDATE electronic SET type1 = ?, brand = ?, model = ? WHERE id = ?"
 	_, err := db.Exec(query, type1, brand, model, id)
 	if err != nil {
 		return err
@@ -239,7 +250,6 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
-
 	defer db.Close()
 
 	vars := mux.Vars(r)
@@ -247,20 +257,18 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	deviceID, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid 'id' parameter", http.StatusBadRequest)
+		http.Error(w, "Invalid device ID", http.StatusBadRequest)
 		return
 	}
 
-	user := DeleteDevice(db, deviceID)
+	err = DeleteDevice(db, deviceID)
 	if err != nil {
 		http.Error(w, "Device not found", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprintln(w, "Device deleted successfully")
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(Response{Status: "success", Message: "Device deleted successfully"})
 }
 
 func DeleteDevice(db *sql.DB, id int) error {
@@ -298,7 +306,7 @@ func handleJSONRequest(w http.ResponseWriter, r *http.Request) {
 
 	response := Response{
 		Status:  "success",
-		Message: "data successfully received  ",
+		Message: "data successfully received",
 	}
 
 	w.Header().Set("Content-Type", "application/json")

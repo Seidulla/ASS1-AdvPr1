@@ -2,132 +2,224 @@
 <html>
 <head>
     <title>Device List</title>
-   <style>
+    <style>
+        /* Добавьте ваши стили здесь */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
-       body {
-           font-family: Arial, sans-serif;
-           margin: 0;
-           padding: 0;
-           background-color: #f4f4f4;
-       }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
 
+        div {
+            text-align: center;
+            margin-top: 10px;
+        }
 
-       h1 {
-           text-align: center;
-           margin-top: 20px;
-           color: #333;
-       }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
 
+        a:hover {
+            text-decoration: underline;
+        }
 
-       div {
-           text-align: center;
-           margin-top: 10px;
-       }
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
 
-       a {
-           color: #007bff;
-           text-decoration: none;
-       }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
 
-       a:hover {
-           text-decoration: underline;
-       }
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
 
+        button[type="submit"],
+        button[type="button"] {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-       form {
-           margin-top: 20px;
-           text-align: center;
-       }
+        button[type="submit"]:hover,
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
 
-       label {
-           display: block;
-           margin-bottom: 5px;
-           color: #333;
-       }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
 
-       input[type="text"],
-       input[type="number"],
-       select {
-           padding: 5px;
-           margin-bottom: 10px;
-           width: 200px;
-           border-radius: 5px;
-           border: 1px solid #ccc;
-       }
+        li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-       button[type="submit"] {
-           padding: 8px 15px;
-           background-color: #007bff;
-           color: #fff;
-           border: none;
-           border-radius: 5px;
-           cursor: pointer;
-       }
+        .device-details {
+            flex-grow: 1;
+        }
 
-       button[type="submit"]:hover {
-           background-color: #0056b3;
-       }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
 
+        .actions button {
+            background-color: #dc3545;
+        }
 
-       ul {
-           list-style-type: none;
-           padding: 0;
-           margin-top: 20px;
-       }
+        .actions button:hover {
+            background-color: #c82333;
+        }
 
-       li {
-           background-color: #fff;
-           padding: 10px;
-           margin-bottom: 5px;
-           border-radius: 5px;
-           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-       }
-       
-       form:last-of-type {
-           margin-top: 20px;
-           text-align: center;
-       }
+        .edit-form {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+        }
+    </style>
+    <script>
+        function showEditForm(id) {
+            document.getElementById('edit-form-' + id).style.display = 'block';
+        }
 
-   </style>
+        function hideEditForm(id) {
+            document.getElementById('edit-form-' + id).style.display = 'none';
+        }
+
+        function deleteDevice(id) {
+            fetch('/device/' + id, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete device');
+                    }
+                });
+        }
+
+        function updateDevice(id) {
+            const form = document.getElementById('edit-form-' + id);
+            const type1 = form.querySelector('input[name="type1"]').value;
+            const brand = form.querySelector('input[name="brand"]').value;
+            const model = form.querySelector('input[name="model"]').value;
+
+            fetch('/device/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type1, brand, model })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to update device');
+                    }
+                });
+        }
+    </script>
 </head>
 <body>
-    <h1>Device List</h1>
-    <div>
-        <a href="/register">Register</a> | <a href="/login">Login</a>
-    </div>
-    <form action="/" method="get">
-        <label for="filter">Filter by Brand:</label>
-        <input type="text" id="filter" name="filter" placeholder="Enter filter">
-        <button type="submit">Apply Filter</button>
-    </form>
-    <form action="/" method="get">
-        <label for="sort">Sort by:</label>
-        <select id="sort" name="sort">
-            <option value="">None</option>
-            <option value="brand">Brand</option>
-            <option value="model">Model</option>
-            <option value="type1">Type</option>
-        </select>
-        <button type="submit">Apply Sort</button>
-    </form>
-    <ul>
-        {{range .}}
-        <li>{{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}</li>
-        {{end}}
-    </ul>
-    <form action="/" method="get">
-        <label for="page">Page:</label>
-        <input type="number" id="page" name="page" min="1">
-        <button type="submit">Go</button>
-    </form>
-    <form action="/device" method="post">
-        <label for="type1">Type:</label>
-        <input type="text" id="type1" name="type1">
-        <label for="brand">Brand:</label>
-        <input type="text" id="brand" name="brand">
-        <label for="model">Model:</label>
-        <input type="text" id="model" name="model">
-        <button type="submit">Create</button>
-    </form>
+<h1>Device List</h1>
+<div>
+    <a href="/register">Register</a> | <a href="/login">Login</a>
+</div>
+<form action="/" method="get">
+    <label for="filter">Filter by Brand:</label>
+    <input type="text" id="filter" name="filter" placeholder="Enter filter">
+    <button type="submit">Apply Filter</button>
+</form>
+<form action="/" method="get">
+    <label for="sort">Sort by:</label>
+    <select id="sort" name="sort">
+        <option value="">None</option>
+        <option value="brand">Brand</option>
+        <option value="model">Model</option>
+        <option value="type1">Type</option>
+    </select>
+    <button type="submit">Apply Sort</button>
+</form>
+<ul>
+    {{range .}}
+    <li>
+        <div class="device-details">
+            {{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}
+        </div>
+        <div class="actions">
+            <button type="button" onclick="showEditForm({{.ID}})">Edit</button>
+            <button type="button" onclick="deleteDevice({{.ID}})">Delete</button>
+        </div>
+        <form class="edit-form" id="edit-form-{{.ID}}">
+            <label for="type1-{{.ID}}">Type:</label>
+            <input type="text" name="type1" value="{{.Type1}}">
+            <label for="brand-{{.ID}}">Brand:</label>
+            <input type="text" name="brand" value="{{.Brand}}">
+            <label for="model-{{.ID}}">Model:</label>
+            <input type="text" name="model" value="{{.Model}}">
+            <button type="button" onclick="updateDevice({{.ID}})">Update</button>
+            <button type="button" onclick="hideEditForm({{.ID}})">Cancel</button>
+        </form>
+    </li>
+    {{end}}
+</ul>
+<form action="/" method="get">
+    <label for="page">Page:</label>
+    <select id="page" name="page">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+    <button type="submit">Go</button>
+</form>
+
+<form action="/device" method="post">
+    <label for="type1">Type:</label>
+    <input type="text" id="type1" name="type1">
+    <label for="brand">Brand:</label>
+    <input type="text" id="brand" name="brand">
+    <label for="model">Model:</label>
+    <input type="text" id="model" name="model">
+    <button type="submit">Create</button>
+</form>
 </body>
 </html>

@@ -1,0 +1,76 @@
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T01:09:00+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:09:49+05:00"}
+{"level":"info","msg":"Error sending confirmation email: 535 5.7.0 NEOBHODIM parol prilozheniya https://help.mail.ru/mail/security/protection/external / Application password is REQUIRED","time":"2024-05-24T01:10:31+05:00"}
+{"level":"info","msg":"Error executing insert query: Error 1062 (23000): Duplicate entry 'aldiyar' for key 'users.username'","time":"2024-05-24T01:10:57+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:11:10+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 17\n","time":"2024-05-24T01:11:54+05:00"}
+{"level":"info","msg":"User role: User\n","time":"2024-05-24T01:11:54+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:12:02+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:33+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:35+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:37+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:41+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:44+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:48+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:29:51+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:30:01+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:30:05+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T01:44:57+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:44:59+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:45:06+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T01:49:30+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:31+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:38+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:40+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:43+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:45+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:47+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:49+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:57+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:49:59+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:50:09+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:50:11+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:19+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:21+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:34+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:41+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:42+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:45+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:46+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:48+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:51+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:53+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:55+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:56:58+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:57:00+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:57:40+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:57:42+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:57:43+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T01:57:45+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T02:35:24+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T02:49:14+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T02:49:19+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T02:49:32+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T02:49:40+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T02:49:43+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T03:00:19+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T03:00:21+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T03:00:22+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T03:00:23+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T03:00:28+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-24T03:57:24+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T03:57:36+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:01:19+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:02:59+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:02+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:06+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:12+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:15+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:41+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:45+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:48+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:03:51+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:04:40+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:04:44+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:04:48+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-24T04:04:53+05:00"}
