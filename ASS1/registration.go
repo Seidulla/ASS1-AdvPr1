@@ -25,8 +25,8 @@ type User struct {
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = "parol??"
-	dbName   = "electronics"
+	dbPass   = "aldi6on9"
+	dbName   = "electronicsdb"
 )
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
