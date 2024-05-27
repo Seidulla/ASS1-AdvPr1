@@ -4,9 +4,10 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"fmt"
+	"net/http"
+
 	"github.com/go-gomail/gomail"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 )
 
 func changePasswordHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +44,7 @@ func changePasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 func validateCurrentPassword(userID string, currentPassword string) bool {
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Error("Failed to open database connection: ", err)
@@ -69,7 +70,7 @@ func validateCurrentPassword(userID string, currentPassword string) bool {
 
 func updatePasswordInDatabase(userID string, hashedPassword []byte) error {
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Error("Failed to open database connection: ", err)
@@ -109,7 +110,7 @@ func changeEmailHandler(w http.ResponseWriter, r *http.Request) {
 
 func updateEmailInDatabase(userID string, newEmail string) error {
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Error("Failed to open database connection: ", err)
@@ -149,12 +150,12 @@ func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
 
 func sendEmail(email, discount string) error {
 	m := gomail.NewMessage()
-	m.SetHeader("From", "example@mail.ru") //
+	m.SetHeader("From", "sagidolla04@internet.ru") //
 	m.SetHeader("To", email)
 	m.SetHeader("Subject", "Special Discount Offer")
 	m.SetBody("text/html", fmt.Sprintf("Dear user,<br><br>We are pleased to offer you a special discount: %s.<br><br>Best regards,<br>Device Shop", discount))
 
-	d := gomail.NewDialer("smtp.mail.ru", 587, "example@mail.ru", "Qe4z29dRxiJDPvFn4QTQ")
+	d := gomail.NewDialer("smtp.mail.ru", 587, "esagidolla04@internet.ru", "HBthmWAUUQ4JS7AvsK5v")
 	d.TLSConfig = &tls.Config{ServerName: "smtp.mail.ru"}
 
 	if err := d.DialAndSend(m); err != nil {
@@ -163,7 +164,7 @@ func sendEmail(email, discount string) error {
 	return nil
 }
 func getAllUserEmails() ([]string, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		return nil, err

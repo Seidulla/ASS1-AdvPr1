@@ -4,12 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 	"html/template"
 	"net/http"
 	"strconv"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 )
 
 type RequestBody struct {
@@ -80,7 +81,7 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDevicesFromDBWithPagination(query string) ([]Device, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		return nil, err
@@ -109,7 +110,7 @@ func GetDevicesFromDBWithPagination(query string) ([]Device, error) {
 }
 
 func GetDevicesFromDB() ([]Device, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		return nil, err

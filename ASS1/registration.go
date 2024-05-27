@@ -24,9 +24,9 @@ type User struct {
 
 const (
 	dbDriver = "mysql"
-	dbUser   = "root"
-	dbPass   = "aldi6on9"
-	dbName   = "electronicsdb"
+	dbUser   = "sql12709748"
+	dbPass   = "IYn2D1uW7m"
+	dbName   = "sql12709748"
 )
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+		dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 		db, err := sql.Open(dbDriver, dsn)
 		if err != nil {
 			log.Println("Error opening database connection:", err)
@@ -107,8 +107,8 @@ func generateToken(length int) (string, error) {
 }
 
 func sendConfirmationEmail(email, token string) error {
-	from := "example@mail.ru"
-	password := "Qe4z29dRxiJDPvFn4QTQ"
+	from := "sagidolla04@internet.ru"
+	password := "HBthmWAUUQ4JS7AvsK5v"
 	to := email
 	smtpHost := "smtp.mail.ru"
 	smtpPort := "587"
@@ -127,7 +127,7 @@ func sendConfirmationEmail(email, token string) error {
 func confirmHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)

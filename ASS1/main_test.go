@@ -13,7 +13,7 @@ import (
 )
 
 func TestCreateDevice(t *testing.T) {
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		t.Fatal(err)
@@ -27,7 +27,7 @@ func TestCreateDevice(t *testing.T) {
 }
 
 func TestGetDeviceHandler(t *testing.T) {
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		t.Fatal(err)

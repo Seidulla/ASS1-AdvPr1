@@ -3,9 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"net/http"
 	"strconv"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type Role struct {
@@ -27,7 +28,7 @@ func methodOverrideMiddleware(next http.Handler) http.Handler {
 func createRoleHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Println("Failed to open database connection: ", err)
@@ -57,7 +58,7 @@ func updateRoleHandler(w http.ResponseWriter, r *http.Request) {
 
 	name := r.FormValue("name")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Println("Failed to open database connection: ", err)
@@ -85,7 +86,7 @@ func deleteRoleHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Println("Failed to open database connection: ", err)
@@ -130,7 +131,7 @@ func isAdmin(r *http.Request) bool {
 		return false
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Error("Failed to open database connection: ", err)

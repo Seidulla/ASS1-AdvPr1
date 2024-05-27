@@ -31,7 +31,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+		dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 		db, err := sql.Open(dbDriver, dsn)
 		if err != nil {
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -147,7 +147,7 @@ func userProfileHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminProfileHandler(w http.ResponseWriter, r *http.Request) {
-	dsn := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", dbUser, dbPass, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		log.Println("Failed to open database connection: ", err)

@@ -68,6 +68,50 @@
         }
     </style>
 
+    <script>
+        function showEditForm(id) {
+            document.getElementById('edit-form-' + id).style.display = 'block';
+        }
+
+        function hideEditForm(id) {
+            document.getElementById('edit-form-' + id).style.display = 'none';
+        }
+
+        function deleteDevice(id) {
+            fetch('/device/' + id, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete device');
+                    }
+                });
+        }
+
+        function updateDevice(id) {
+            const form = document.getElementById('edit-form-' + id);
+            const type1 = form.querySelector('input[name="type1"]').value;
+            const brand = form.querySelector('input[name="brand"]').value;
+            const model = form.querySelector('input[name="model"]').value;
+
+            fetch('/device/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type1, brand, model })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to update device');
+                    }
+                });
+        }
+    </script>
 </head>
 <body>
 <h1>Admin Profile</h1>
@@ -113,6 +157,8 @@
     <textarea id="discount" name="discount" rows="4" cols="50"></textarea><br>
     <button type="submit">Send Email to All Users</button>
 </form>
+
+
 
 </body>
 </html>
