@@ -139,7 +139,8 @@ func GetDevicesFromDB() ([]Device, error) {
 }
 
 func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -167,7 +168,8 @@ func CreateDevice(db *sql.DB, type1, brand, model string) error {
 }
 
 func getDeviceHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -205,7 +207,8 @@ func GetDevice(db *sql.DB, id int) (*Device, error) {
 }
 
 func updateDeviceHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -247,7 +250,8 @@ func UpdateDevice(db *sql.DB, id int, type1, brand, model string) error {
 }
 
 func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
 		panic(err.Error())
 	}

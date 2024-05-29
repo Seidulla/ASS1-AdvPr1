@@ -9,7 +9,7 @@ import (
 	"golang.org/x/time/rate"
 )
 
-var limiter = rate.NewLimiter(1, 3)
+var limiter = rate.NewLimiter(1, 10)
 var log = logrus.New()
 
 func main() {
