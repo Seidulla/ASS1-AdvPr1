@@ -10,7 +10,6 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 )
 
 type RequestBody struct {
@@ -27,57 +26,6 @@ type Device struct {
 	Type1 string `json:"type1"`
 	Brand string `json:"brand"`
 	Model string `json:"model"`
-}
-
-func mainPageHandler(w http.ResponseWriter, r *http.Request) {
-	devices, err := GetDevicesFromDB()
-	if err != nil {
-		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
-		return
-	}
-	filter := r.URL.Query().Get("filter")
-	sort := r.URL.Query().Get("sort")
-	page := r.URL.Query().Get("page")
-
-	limit := 10
-	offset := 0
-
-	if p, err := strconv.Atoi(page); err == nil && p > 1 {
-		offset = (p - 1) * limit
-	}
-
-	log.WithFields(logrus.Fields{
-		"action": "mainPageHandler",
-		"method": r.Method,
-		"path":   r.URL.Path,
-	}).Info("Handling main page request")
-
-	query := "SELECT id, type1, brand, model FROM electronic"
-	if filter != "" {
-		query += " WHERE brand LIKE '%" + filter + "%'"
-	}
-	if sort != "" {
-		query += " ORDER BY " + sort
-	}
-	query += fmt.Sprintf(" LIMIT %d OFFSET %d", limit, offset)
-
-	devices, err = GetDevicesFromDBWithPagination(query)
-	if err != nil {
-		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
-		return
-	}
-
-	tmpl, err := template.ParseFiles("pages/index.html")
-	if err != nil {
-		http.Error(w, "Failed to load template", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, devices)
-	if err != nil {
-		http.Error(w, "Failed to render template", http.StatusInternalServerError)
-		return
-	}
 }
 
 func GetDevicesFromDBWithPagination(query string) ([]Device, error) {

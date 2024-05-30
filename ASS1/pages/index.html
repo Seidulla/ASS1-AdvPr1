@@ -111,7 +111,11 @@
 <body>
 <h1>Device List</h1>
 <div>
+    {{if .IsLoggedIn}}
+    <a href="/user">Profile</a> | <a href="/logout">Logout</a>
+    {{else}}
     <a href="/register">Register</a> | <a href="/login">Login</a>
+    {{end}}
 </div>
 <form action="/" method="get">
     <label for="filter">Filter by Brand:</label>
@@ -129,11 +133,15 @@
     <button type="submit">Apply Sort</button>
 </form>
 <ul>
-    {{range .}}
+    {{range .Devices}}
     <li>
         <div class="device-details">
             {{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}
         </div>
+        <form action="/buy" method="post" style="display:inline;">
+            <input type="hidden" name="device_id" value="{{.ID}}">
+            <button type="submit">Buy</button>
+        </form>
     </li>
     {{end}}
 </ul>

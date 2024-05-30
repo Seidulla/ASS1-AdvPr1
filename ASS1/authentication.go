@@ -141,11 +141,33 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func userProfileHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		http.ServeFile(w, r, "pages/profile.html")
+	userID := getUserIDFromRequest(r)
+	if userID == "" {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+
+	cartStorage.RLock()
+	cart := cartStorage.carts[userID]
+	cartStorage.RUnlock()
+
+	data := struct {
+		Cart []Device
+	}{
+		Cart: cart,
+	}
+
+	tmpl, err := template.ParseFiles("pages/profile.html")
+	if err != nil {
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		return
+	}
 }
 
 func adminProfileHandler(w http.ResponseWriter, r *http.Request) {

@@ -62,6 +62,16 @@
 <body>
 <h1>User Profile</h1>
 <p>Welcome to the user profile page!</p>
+<div class="back-link">
+    <a href="/">Back to Home</a>
+</div>
+
+<h2>Your Cart</h2>
+<ul>
+    {{range .Cart}}
+    <li>{{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}</li>
+    {{end}}
+</ul>
 
 <h2>Change Password</h2>
 <form action="/change-password" method="post">
