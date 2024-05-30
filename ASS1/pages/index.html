@@ -107,50 +107,6 @@
             gap: 5px;
         }
     </style>
-    <script>
-        function showEditForm(id) {
-            document.getElementById('edit-form-' + id).style.display = 'block';
-        }
-
-        function hideEditForm(id) {
-            document.getElementById('edit-form-' + id).style.display = 'none';
-        }
-
-        function deleteDevice(id) {
-            fetch('/device/' + id, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert('Failed to delete device');
-                    }
-                });
-        }
-
-        function updateDevice(id) {
-            const form = document.getElementById('edit-form-' + id);
-            const type1 = form.querySelector('input[name="type1"]').value;
-            const brand = form.querySelector('input[name="brand"]').value;
-            const model = form.querySelector('input[name="model"]').value;
-
-            fetch('/device/' + id, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ type1, brand, model })
-            })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert('Failed to update device');
-                    }
-                });
-        }
-    </script>
 </head>
 <body>
 <h1>Device List</h1>
@@ -178,20 +134,6 @@
         <div class="device-details">
             {{.ID}} - {{.Type1}} - {{.Brand}} - {{.Model}}
         </div>
-        <div class="actions">
-            <button type="button" onclick="showEditForm({{.ID}})">Edit</button>
-            <button type="button" onclick="deleteDevice({{.ID}})">Delete</button>
-        </div>
-        <form class="edit-form" id="edit-form-{{.ID}}">
-            <label for="type1-{{.ID}}">Type:</label>
-            <input type="text" name="type1" value="{{.Type1}}">
-            <label for="brand-{{.ID}}">Brand:</label>
-            <input type="text" name="brand" value="{{.Brand}}">
-            <label for="model-{{.ID}}">Model:</label>
-            <input type="text" name="model" value="{{.Model}}">
-            <button type="button" onclick="updateDevice({{.ID}})">Update</button>
-            <button type="button" onclick="hideEditForm({{.ID}})">Cancel</button>
-        </form>
     </li>
     {{end}}
 </ul>
@@ -210,16 +152,6 @@
         <option value="10">10</option>
     </select>
     <button type="submit">Go</button>
-</form>
-
-<form action="/device" method="post">
-    <label for="type1">Type:</label>
-    <input type="text" id="type1" name="type1">
-    <label for="brand">Brand:</label>
-    <input type="text" id="brand" name="brand">
-    <label for="model">Model:</label>
-    <input type="text" id="model" name="model">
-    <button type="submit">Create</button>
 </form>
 </body>
 </html>

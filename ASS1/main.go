@@ -1,12 +1,11 @@
 package main
 
 import (
-	"net/http"
-	"os"
-
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
+	"net/http"
+	"os"
 )
 
 var limiter = rate.NewLimiter(1, 10)
@@ -27,10 +26,6 @@ func main() {
 	r.Use(methodOverrideMiddleware)
 	r.HandleFunc("/", limitHandler(mainPageHandler)).Methods("GET")
 	r.HandleFunc("/json", limitHandler(handleJSONRequest)).Methods("POST")
-	r.HandleFunc("/device", limitHandler(createDeviceHandler)).Methods("POST")
-	r.HandleFunc("/device/{id}", limitHandler(getDeviceHandler)).Methods("GET")
-	r.HandleFunc("/device/{id}", limitHandler(updateDeviceHandler)).Methods("PUT")
-	r.HandleFunc("/device/{id}", limitHandler(deleteDeviceHandler)).Methods("DELETE")
 
 	r.HandleFunc("/register", registerHandler).Methods("GET", "POST")
 	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
@@ -39,6 +34,13 @@ func main() {
 	r.HandleFunc("/admin", authMiddleware(adminMiddleware(adminProfileHandler))).Methods("GET")
 	r.HandleFunc("/change-password", authMiddleware(changePasswordHandler)).Methods("POST")
 	r.HandleFunc("/change-email", authMiddleware(changeEmailHandler)).Methods("POST")
+
+	// Admin routes for device management
+	r.HandleFunc("/device", authMiddleware(adminMiddleware(createDeviceHandler))).Methods("POST")
+	r.HandleFunc("/device/{id}", authMiddleware(adminMiddleware(getDeviceHandler))).Methods("GET")
+	r.HandleFunc("/device/{id}", authMiddleware(adminMiddleware(updateDeviceHandler))).Methods("POST", "PUT")
+	r.HandleFunc("/device/{id}", authMiddleware(adminMiddleware(deleteDeviceHandler))).Methods("POST", "DELETE")
+
 	r.HandleFunc("/admin/roles", authMiddleware(adminMiddleware(createRoleHandler))).Methods("POST")
 	r.HandleFunc("/admin/roles/update", authMiddleware(adminMiddleware(updateRoleHandler))).Methods("POST")
 	r.HandleFunc("/admin/roles/delete", authMiddleware(adminMiddleware(deleteRoleHandler))).Methods("POST")

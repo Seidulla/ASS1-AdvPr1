@@ -198,3 +198,134 @@
 {"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T14:14:07+05:00"}
 {"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T14:14:13+05:00"}
 {"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T14:14:24+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-29T14:33:57+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T14:34:14+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T14:34:30+05:00"}
+{"level":"info","msg":"Invalid password","time":"2024-05-29T14:34:42+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 17\n","time":"2024-05-29T14:34:49+05:00"}
+{"level":"info","msg":"User role: User\n","time":"2024-05-29T14:34:50+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-29T14:50:38+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T14:50:53+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T14:51:08+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T14:51:09+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:122:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T14:51:14+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T14:51:55+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T14:51:56+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:122:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T14:52:02+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-29T14:53:40+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T14:54:07+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T14:54:08+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:122:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T14:54:14+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-29T14:59:13+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T14:59:20+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T14:59:21+05:00"}
+{"level":"info","msg":"Executing template for admin profile with data: {[{1 admin} {2 User}]}","time":"2024-05-29T14:59:26+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:122:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T14:59:26+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-29T15:06:23+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T15:06:39+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T15:06:40+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 17\n","time":"2024-05-29T15:07:02+05:00"}
+{"level":"info","msg":"User role: User\n","time":"2024-05-29T15:07:02+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T15:07:21+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T15:07:21+05:00"}
+{"level":"info","msg":"Executing template for admin profile with data: {[{1 admin} {2 User}]}","time":"2024-05-29T15:07:25+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:122:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T15:07:25+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T15:09:21+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-29T15:10:28+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T15:10:57+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T15:10:58+05:00"}
+{"level":"info","msg":"Executing template for admin profile with data: {[{1 admin} {2 User}]}","time":"2024-05-29T15:11:08+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:122:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T15:11:08+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-29T15:14:36+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-29T15:14:47+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-29T15:14:48+05:00"}
+{"level":"info","msg":"Executing template for admin profile with data: {[{1 admin} {2 User}]}","time":"2024-05-29T15:14:52+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:125:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-29T15:14:52+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:10:41+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:12:48+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:12:49+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:12:52+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:12:56+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:13:03+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:13:12+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:13:19+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:13:19+05:00"}
+{"level":"info","msg":"Executing template for admin profile with data: {[{1 admin} {2 User}]}","time":"2024-05-30T15:13:21+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:125:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-30T15:13:21+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:28:33+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:28:56+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:28:57+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:81:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-30T15:28:59+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:35:05+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 17\n","time":"2024-05-30T15:35:19+05:00"}
+{"level":"info","msg":"User role: User\n","time":"2024-05-30T15:35:19+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:35:28+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:35:29+05:00"}
+{"level":"info","msg":"Failed to execute template:  template: admin.html:81:12: executing \"admin.html\" at \u003c.Devices\u003e: can't evaluate field Devices in type main.AdminPageData","time":"2024-05-30T15:35:31+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:40:14+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:40:20+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:40:20+05:00"}
+{"level":"info","msg":"Failed to fetch devices:  Error 1146 (42S02): Table 'sql12709748.devices' doesn't exist","time":"2024-05-30T15:40:22+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:41:28+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:41:34+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:41:35+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:48:21+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:48:34+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:48:44+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:48:59+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:49:00+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:50:06+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:50:12+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:54:03+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:54:13+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:54:21+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:54:22+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:55:47+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:55:52+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:56:05+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:56:05+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T15:59:02+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T15:59:07+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T15:59:15+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T15:59:15+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:04:09+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:04:22+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:04:22+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:06:11+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:06:16+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:06:23+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:06:23+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:10:06+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:10:28+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:10:46+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:10:46+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:11:35+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:11:53+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:12:00+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:12:01+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:12:41+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:14:58+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:15:12+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:15:38+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:16:43+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:18:20+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:18:25+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:18:26+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:21:02+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:26:06+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:26:10+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:26:16+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:26:16+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:26:32+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:26:58+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:27:35+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:30:05+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:30:40+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:30:45+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:30:48+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:30:56+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:30:56+05:00"}
+{"level":"info","msg":"Server listening on port 8080","time":"2024-05-30T16:34:45+05:00"}
+{"action":"mainPageHandler","level":"info","method":"GET","msg":"Handling main page request","path":"/","time":"2024-05-30T16:34:59+05:00"}
+{"level":"info","msg":"Retrieving role for user ID: 12\n","time":"2024-05-30T16:35:11+05:00"}
+{"level":"info","msg":"User role: admin\n","time":"2024-05-30T16:35:12+05:00"}

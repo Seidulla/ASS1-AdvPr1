@@ -142,9 +142,11 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
-		panic(err.Error())
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		return
 	}
 	defer db.Close()
+
 	type1 := r.FormValue("type1")
 	brand := r.FormValue("brand")
 	model := r.FormValue("model")
@@ -155,29 +157,26 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
 
 func CreateDevice(db *sql.DB, type1, brand, model string) error {
 	query := "INSERT INTO electronic (type1, brand, model) VALUES (?, ?, ?)"
 	_, err := db.Exec(query, type1, brand, model)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func getDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
-		panic(err.Error())
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		return
 	}
 	defer db.Close()
 
 	vars := mux.Vars(r)
 	idStr := vars["id"]
-
 	deviceID, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid device ID", http.StatusBadRequest)
@@ -190,76 +189,74 @@ func getDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(device)
-}
+	tmpl, err := template.ParseFiles("edit_device.html")
+	if err != nil {
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		return
+	}
 
+	err = tmpl.Execute(w, device)
+	if err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		return
+	}
+}
 func GetDevice(db *sql.DB, id int) (*Device, error) {
-	query := "SELECT * FROM electronic WHERE id = ?"
+	query := "SELECT id, type1, brand, model FROM electronic WHERE id = ?"
 	row := db.QueryRow(query, id)
 
 	device := &Device{}
 	err := row.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model)
-	if err != nil {
-		return nil, err
-	}
-	return device, nil
+	return device, err
 }
 
 func updateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
-		panic(err.Error())
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		return
 	}
 	defer db.Close()
 
 	vars := mux.Vars(r)
 	idStr := vars["id"]
-
 	deviceID, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid device ID", http.StatusBadRequest)
 		return
 	}
 
-	var device Device
-	err = json.NewDecoder(r.Body).Decode(&device)
+	type1 := r.FormValue("type1")
+	brand := r.FormValue("brand")
+	model := r.FormValue("model")
+
+	err = UpdateDevice(db, deviceID, type1, brand, model)
 	if err != nil {
-		http.Error(w, "Invalid JSON data", http.StatusBadRequest)
+		http.Error(w, "Failed to update device", http.StatusInternalServerError)
 		return
 	}
 
-	err = UpdateDevice(db, deviceID, device.Type1, device.Brand, device.Model)
-	if err != nil {
-		http.Error(w, "Device not found", http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(Response{Status: "success", Message: "Device updated successfully"})
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
 
 func UpdateDevice(db *sql.DB, id int, type1, brand, model string) error {
 	query := "UPDATE electronic SET type1 = ?, brand = ?, model = ? WHERE id = ?"
 	_, err := db.Exec(query, type1, brand, model, id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
-		panic(err.Error())
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		return
 	}
 	defer db.Close()
 
 	vars := mux.Vars(r)
 	idStr := vars["id"]
-
 	deviceID, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid device ID", http.StatusBadRequest)
@@ -268,20 +265,25 @@ func deleteDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = DeleteDevice(db, deviceID)
 	if err != nil {
-		http.Error(w, "Device not found", http.StatusNotFound)
+		http.Error(w, "Failed to delete device", http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(Response{Status: "success", Message: "Device deleted successfully"})
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
 
 func DeleteDevice(db *sql.DB, id int) error {
+	log.Printf("Deleting device with ID %d\n", id) // Log the ID being deleted
 	query := "DELETE FROM electronic WHERE id = ?"
-	_, err := db.Exec(query, id)
+	result, err := db.Exec(query, id)
 	if err != nil {
+		log.Printf("Error deleting device: %v\n", err) // Log the deletion error
 		return err
 	}
+
+	rowsAffected, _ := result.RowsAffected()
+	log.Printf("Rows affected after deletion: %d\n", rowsAffected) // Log the number of rows affected
+
 	return nil
 }
 

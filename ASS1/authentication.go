@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
+
 	"net/http"
 	"time"
 
@@ -12,7 +13,8 @@ import (
 )
 
 type AdminPageData struct {
-	Roles []Role
+	Roles   []Role
+	Devices []Device
 }
 
 var jwtKey = []byte("my_secret_key")
@@ -156,6 +158,7 @@ func adminProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	// Fetch roles
 	rows, err := db.Query("SELECT id, name FROM roles")
 	if err != nil {
 		log.Println("Failed to fetch roles: ", err)
@@ -180,7 +183,35 @@ func adminProfileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := AdminPageData{Roles: roles}
+	// Fetch devices
+	deviceRows, err := db.Query("SELECT id, type1, brand, model FROM electronic")
+	if err != nil {
+		log.Println("Failed to fetch devices: ", err)
+		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
+		return
+	}
+	defer deviceRows.Close()
+
+	var devices []Device
+	for deviceRows.Next() {
+		var device Device
+		if err := deviceRows.Scan(&device.ID, &device.Type1, &device.Brand, &device.Model); err != nil {
+			log.Println("Failed to scan device: ", err)
+			http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
+			return
+		}
+		devices = append(devices, device)
+	}
+	if err := deviceRows.Err(); err != nil {
+		log.Println("Device rows error: ", err)
+		http.Error(w, "Failed to fetch devices", http.StatusInternalServerError)
+		return
+	}
+
+	data := AdminPageData{
+		Roles:   roles,
+		Devices: devices,
+	}
 	tmpl, err := template.ParseFiles("pages/admin.html")
 	if err != nil {
 		log.Println("Failed to parse template: ", err)
@@ -188,7 +219,8 @@ func adminProfileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
+	err = tmpl.Execute(w, data)
+	if err != nil {
 		log.Println("Failed to execute template: ", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
