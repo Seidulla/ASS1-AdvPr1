@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .header, .footer {
+            text-align: center;
+        }
+        .details {
+            margin-top: 20px;
+        }
+        .details th, .details td {
+            text-align: left;
+            padding: 8px;
+        }
+        .details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>{{.CompanyName}}</h1>
+        <p>Receipt</p>
+    </div>
+    <div class="details">
+        <table>
+            <tr>
+                <th>Transaction Number</th>
+                <td>{{.TransactionNumber}}</td>
+            </tr>
+            <tr>
+                <th>Date and Time</th>
+                <td>{{.DateTime}}</td>
+            </tr>
+            <tr>
+                <th>Customer Name</th>
+                <td>{{.CustomerName}}</td>
+            </tr>
+            <tr>
+                <th>Payment Method</th>
+                <td>{{.PaymentMethod}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="details">
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+            {{range .Items}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.UnitPrice}}</td>
+                <td>{{.Quantity}}</td>
+                <td>{{.Total}}</td>
+            </tr>
+            {{end}}
+            <tr>
+                <th colspan="3">Grand Total</th>
+                <td>{{.GrandTotal}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer">
+        <p>Thank you for your purchase!</p>
+    </div>
+</div>
+</body>
+</html>

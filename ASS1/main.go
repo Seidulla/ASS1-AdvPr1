@@ -1,16 +1,21 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
+	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
+	"gopkg.in/gomail.v2"
 	"html/template"
+	"io"
 	"net/http"
 	"os"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var limiter = rate.NewLimiter(1, 10)
@@ -35,9 +40,12 @@ func main() {
 	r := mux.NewRouter()
 	r.Use(methodOverrideMiddleware)
 	r.HandleFunc("/", limitHandler(mainPageHandler)).Methods("GET")
-	r.HandleFunc("/buy", limitHandler(buyHandler)).Methods("POST")
 	r.HandleFunc("/json", limitHandler(handleJSONRequest)).Methods("POST")
-
+	r.HandleFunc("/buy", buyHandler).Methods("POST")
+	r.HandleFunc("/buy1", buyHandler1).Methods("POST")
+	r.HandleFunc("/payment", paymentHandler).Methods("GET")
+	r.HandleFunc("/process-payment", processPaymentHandler).Methods("POST")
+	r.HandleFunc("/payment-success", paymentSuccessHandler).Methods("GET")
 	r.HandleFunc("/register", registerHandler).Methods("GET", "POST")
 	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
 	r.HandleFunc("/confirm", confirmHandler).Methods("GET")
@@ -135,17 +143,7 @@ func limitHandler(next http.HandlerFunc) http.HandlerFunc {
 		next.ServeHTTP(w, r)
 	}
 }
-
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{
-		Name:   "token",
-		Value:  "",
-		MaxAge: -1,
-	})
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func buyHandler(w http.ResponseWriter, r *http.Request) {
+func buyHandler1(w http.ResponseWriter, r *http.Request) {
 	userID := getUserIDFromRequest(r)
 	if userID == "" {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -172,6 +170,45 @@ func buyHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/user", http.StatusSeeOther)
 }
 
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:   "token",
+		Value:  "",
+		MaxAge: -1,
+	})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func insertTransaction(db *sql.DB, customerID, status string) error {
+	query := "INSERT INTO transactions1 (customer_id, status) VALUES (?, ?)"
+	_, err := db.Exec(query, customerID, status)
+	return err
+}
+
+func buyHandler(w http.ResponseWriter, r *http.Request) {
+	customerID := getUserIDFromRequest(r)
+	if customerID == "" {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
+	db, err := sql.Open(dbDriver, dsn)
+	if err != nil {
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	err = insertTransaction(db, customerID, "pending")
+	if err != nil {
+		http.Error(w, "Failed to create transaction", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/payment", http.StatusSeeOther)
+}
+
 func GetDeviceByID(id int) (Device, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(sql12.freesqldatabase.com)/%s", dbUser, dbPass, dbName)
 	db, err := sql.Open(dbDriver, dsn)
@@ -188,4 +225,184 @@ func GetDeviceByID(id int) (Device, error) {
 	}
 
 	return device, nil
+}
+
+type ReceiptData struct {
+	CompanyName       string
+	TransactionNumber string
+	DateTime          string
+	CustomerName      string
+	PaymentMethod     string
+	Items             []Item
+	GrandTotal        string
+}
+
+type Item struct {
+	Name      string
+	UnitPrice string
+	Quantity  int
+	Total     string
+}
+
+func generateReceiptPDF(data ReceiptData) ([]byte, error) {
+	tmpl, err := template.ParseFiles("pages/receipt_template.html")
+	if err != nil {
+		return nil, err
+	}
+
+	var tpl bytes.Buffer
+	if err := tmpl.Execute(&tpl, data); err != nil {
+		return nil, err
+	}
+
+	pdfg, err := wkhtmltopdf.NewPDFGenerator()
+	if err != nil {
+		return nil, err
+	}
+
+	pdfg.AddPage(wkhtmltopdf.NewPageReader(bytes.NewReader(tpl.Bytes())))
+	pdfg.MarginTop.Set(10)
+	pdfg.MarginRight.Set(10)
+	pdfg.MarginBottom.Set(10)
+	pdfg.MarginLeft.Set(10)
+	pdfg.Dpi.Set(300)
+	pdfg.Orientation.Set(wkhtmltopdf.OrientationPortrait)
+	pdfg.Grayscale.Set(false)
+	pdfg.NoCollate.Set(false)
+
+	err = pdfg.Create()
+	if err != nil {
+		return nil, err
+	}
+
+	return pdfg.Bytes(), nil
+}
+
+func processPaymentHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	cardNumber := r.FormValue("cardNumber")
+	expirationDate := r.FormValue("expirationDate")
+	cvv := r.FormValue("cvv")
+	name := r.FormValue("name")
+	address := r.FormValue("address")
+	log.Println(cardNumber, expirationDate, cvv, name, address)
+
+	// Simulate payment processing
+	paymentSuccessful := true // For testing, always assume the payment is successful
+
+	if paymentSuccessful {
+		// Simulate transaction data
+		receiptData := ReceiptData{
+			CompanyName:       "Your Company",
+			TransactionNumber: "1234567890",
+			DateTime:          time.Now().Format("2006-01-02 15:04:05"),
+			CustomerName:      name,
+			PaymentMethod:     "Credit Card",
+			Items: []Item{
+				{Name: "Item 1", UnitPrice: "$10.00", Quantity: 1, Total: "$10.00"},
+				{Name: "Item 2", UnitPrice: "$20.00", Quantity: 2, Total: "$40.00"},
+			},
+			GrandTotal: "$50.00",
+		}
+
+		pdfBytes, err := generateReceiptPDF(receiptData)
+		if err != nil {
+			log.Printf("Failed to generate PDF: %v", err)
+			http.Error(w, "Failed to generate PDF", http.StatusInternalServerError)
+			return
+		}
+
+		// Assuming the client email is available
+
+		clientEmail := "craldiyar@gmail.com"
+		err = sendEmailWithAttachment(clientEmail, pdfBytes)
+		if err != nil {
+			log.Printf("Failed to send email: %v", err)
+			http.Error(w, "Failed to send email", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/payment-success", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Payment failed", http.StatusPaymentRequired)
+	}
+}
+
+func getEmailByID(db *sql.DB, userID int) (string, error) {
+	var email string
+	query := "SELECT email FROM users WHERE id = ?"
+	err := db.QueryRow(query, userID).Scan(&email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", fmt.Errorf("no user found with id %d", userID)
+		}
+		return "", err
+	}
+	return email, nil
+}
+
+func sendEmailWithAttachment(to string, pdfBytes []byte) error {
+	m := gomail.NewMessage()
+	m.SetHeader("From", "sagidolla04@internet.ru")
+	m.SetHeader("To", to)
+	m.SetHeader("Subject", "Your Receipt")
+	m.SetBody("text/plain", "Thank you for your purchase. Please find your receipt attached.")
+
+	m.Attach("receipt.pdf", gomail.SetCopyFunc(func(w io.Writer) error {
+		_, err := w.Write(pdfBytes)
+		return err
+	}))
+
+	d := gomail.NewDialer("smtp.mail.ru", 587, "sagidolla04@internet.ru", "HBthmWAUUQ4JS7AvsK5v")
+
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+	return nil
+}
+
+func updateTransactionStatus(db *sql.DB, transactionID int, status string) error {
+	query := "UPDATE transactions1 SET status = ? WHERE customer_id = ?"
+	_, err := db.Exec(query, status, transactionID)
+	if err != nil {
+		log.Printf("Error executing query: %v", err)
+	}
+	return err
+}
+
+func getTransactionIDFromSession(r *http.Request) int {
+	// For demonstration, returning a static transaction ID
+	// In real implementation, retrieve it from session or request context
+	return 21
+}
+
+func paymentHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("pages/payment.html")
+	if err != nil {
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		return
+	}
+}
+
+func paymentSuccessHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("pages/payment_success.html")
+	if err != nil {
+		log.Printf("Failed to load template: %v", err)
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Printf("Failed to render template: %v", err)
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		return
+	}
 }
